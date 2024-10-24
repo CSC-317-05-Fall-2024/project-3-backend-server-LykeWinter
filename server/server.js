@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import restaurantData from './data/restaurants.js';
+import restaurantData, { getRestaurants, getRestaurant } from './data/restaurants.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,7 +26,20 @@ app.get('/attractions',(req, res) => {
 
 // Route for the restaurants page (using EJS)
 app.get('/restaurants', (req, res) => {
-    res.render('restaurants', { restaurants: restaurantData }); // Pass the restaurant data to EJS
+    const restaurants = getRestaurants();  //New function to get restaurant data
+    res.render('restaurants', { restaurants }); // Passign the data to the EJS view
+});
+
+// Route for getting a specific restaurant by ID
+app.get('/restaurants/:id', (req, res) => {
+    const restaurantId = Number(req.params.id); // Get the ID from the parameters
+    const restaurant = getRestaurant(restaurantId); // Use the function to find the restaurant
+
+    if (restaurant) {
+        res.render('restaurant-details', restaurant); // Pass the restaurant data to the view
+    } else {
+        res.status(404).send('Restaurant not found'); 
+    }
 });
 
 /// Route for the New Restaurant page
