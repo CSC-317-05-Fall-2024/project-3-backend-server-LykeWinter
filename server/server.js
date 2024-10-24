@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import restaurantData, { getRestaurants, getRestaurant } from './data/restaurants.js';
+import apiRouter from './routes/api.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -41,6 +42,8 @@ app.get('/restaurants/:id', (req, res) => {
         res.status(404).send('Restaurant not found'); 
     }
 });
+
+app.use('/api', apiRouter); // Mount the router with the /api prefix
 
 /// Route for the New Restaurant page
 app.get('/new-restaurant-form', (req, res) => {
